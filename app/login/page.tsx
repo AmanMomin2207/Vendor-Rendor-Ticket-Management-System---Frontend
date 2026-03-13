@@ -157,13 +157,14 @@ export default function LoginPage() {
             <p className="text-white/30 text-xs font-medium mb-2 uppercase tracking-wider">Demo credentials</p>
             <div className="space-y-1">
               {[
-                { role: 'Admin', email: 'admin@test.com' },
-                { role: 'Buyer', email: 'buyer@test.com' },
-                { role: 'Vendor', email: 'vendor@test.com' },
+                { role: 'Admin', email: 'admin@test.com' , password : '123456'},
+                { role: 'Buyer', email: 'buyer@test.com' , password : '123456' },
+                { role: 'Vendor', email: 'vendor@test.com' , password : '123456'},
               ].map((d) => (
                 <div key={d.role} className="flex items-center justify-between text-xs">
                   <span className="text-white/40">{d.role}:</span>
                   <span className="text-white/30 font-mono">{d.email}</span>
+                  <span className="text-white/30 font-mono">{d.password}</span>
                 </div>
               ))}
             </div>

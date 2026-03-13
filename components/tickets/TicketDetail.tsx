@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import toast from 'react-hot-toast'
-import { ArrowLeft, Loader2, User, Calendar, Tag, Activity, History, CheckCircle2  } from 'lucide-react'
+import { ArrowLeft, Loader2, User, Calendar, Tag, Activity, History, CheckCircle2 , Paperclip } from 'lucide-react'
 import { Ticket, Role, TicketStatus } from '@/types'
 import { PriorityBadge, StatusBadge } from '@/components/ui/Badges'
 import { formatDate } from '@/lib/utils'
@@ -11,6 +11,7 @@ import TicketTimeline from '@/components/tickets/TicketTimeline'
 import TicketComments from '@/components/tickets/TicketComments'
 import { MessageSquare } from 'lucide-react'
 import { ticketApi, commentApi, userApi } from '@/lib/api'
+import AttachmentViewer from '@/components/tickets/AttachmentViewer'
 
 interface TicketDetailProps {
   id: string
@@ -80,15 +81,25 @@ export default function TicketDetail({ id, role }: TicketDetailProps) {
   }
 
   const handleAssign = async () => {
+    console.log('=== ASSIGN DEBUG ===')
+    console.log('vendorId:', vendorId)
+    console.log('ticketId:', id)  
+    console.log('ticket.status:', ticket?.status)
+    console.log('role:', role)
+    
     if (!vendorId.trim()) { toast.error('Enter a vendor ID'); return }
+    
     setActionLoading(true)
     try {
       const res = await ticketApi.assignTicket(id, vendorId)
+      console.log('Success:', res.data)
       setTicket(res.data.data)
       setAssignOpen(false)
+      setVendorId('')          // ✅ clear after success
       toast.success('Ticket assigned!')
     } catch (err: any) {
-      toast.error(err.response?.data?.message || 'Assignment failed')
+      console.error('Full error:', err.response)   // 👈 this shows exact backend message
+      toast.error(err.response?.data?.message || err.message || 'Assignment failed')
     } finally {
       setActionLoading(false)
     }
@@ -256,6 +267,15 @@ export default function TicketDetail({ id, role }: TicketDetailProps) {
         </div>
       </div>
       
+      {/* Attachment */}
+      <div className="glass rounded-2xl border border-white/5 p-5 mt-4">
+        <div className="flex items-center gap-2 mb-3">
+          <Paperclip size={14} className="text-white/30" />
+          <p className="text-white/30 text-xs uppercase tracking-wider">Attachment</p>
+        </div>
+        <AttachmentViewer ticket={ticket} />    {/* ✅ pass ticket not just id */}
+      </div>
+
       <div className="glass rounded-2xl border border-white/5 p-5 mt-4">
         <div className="flex items-center gap-2 mb-4">
           <History size={14} className="text-white/30" />

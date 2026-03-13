@@ -13,19 +13,27 @@ export interface User {
   createdAt: string
 }
 
+// Update Ticket interface:
 export interface Ticket {
   id: string
   title: string
   description: string
-  priority: Priority
+  priority: 'LOW' | 'MEDIUM' | 'HIGH'
   status: TicketStatus
   createdBy: string
-  assignedTo: string | null
+  assignedTo?: string
+  resolutionNote?: string
+
+  // ✅ GridFS fields
+  fileId?: string | null
+  attachmentName?: string | null
+  attachmentType?: string | null
+  attachmentSize?: number | null
+
   createdAt: string
   updatedAt: string
-  resolvedAt: string | null
-  closedAt: string | null
-  resolutionNote: string | null
+  resolvedAt?: string
+  closedAt?: string
 }
 
 export interface DashboardResponse {

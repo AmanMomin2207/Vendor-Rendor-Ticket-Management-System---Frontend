@@ -55,8 +55,15 @@ export const ticketApi = {
 
   getTicketById: (id: string) => api.get(`/api/tickets/${id}`),
 
-  createTicket: (data: { title: string; description: string; priority: string }) =>
-    api.post('/api/tickets/create', data),
+  // Replace existing createTicket in ticketApi:
+  createTicket: (formData: FormData) =>
+  api.post('/api/tickets/create', formData, {
+    headers: { 'Content-Type': 'multipart/form-data' },
+  }),
+
+  // Keep download endpoint:
+  downloadAttachment: (id: string) =>
+    api.get(`/api/tickets/${id}/attachment/download`, { responseType: 'blob' }),
 
   assignTicket: (id: string, vendorId: string) =>
     api.put(`/api/tickets/${id}/assign`, { vendorId }),
@@ -70,6 +77,7 @@ export const ticketApi = {
     api.get('/api/tickets/export', { responseType: 'blob' }),
 
   getHistory: (id: string) => api.get(`/api/tickets/${id}/history`),
+
 }
 
 // ─── Dashboard ───────────────────────────────────────────
